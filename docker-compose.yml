@@ -1,63 +1,32 @@
-services:
-  postgres:
-    image: postgres:15
-    container_name: estate_postgres
-    restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: estate_app
-    ports:
-      - "5432:5432"
-    volumes:
-      - db_data:/var/lib/postgresql/data
+version: "3.9"
 
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: estate_pgadmin
-    restart: always
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@ochiga.com
-      PGADMIN_DEFAULT_PASSWORD: admin123
+services:
+  frontend:
+    build:
+      context: ./Ochiga-Estate-App/Ochiga-frontend-for-estate-and-smart-home/ochiga-frontend
+      dockerfile: Dockerfile
+    container_name: ochiga-frontend
     ports:
-      - "5050:80"
+      - "3000:3000"
+    working_dir: /app
+    volumes:
+      - ./Ochiga-Estate-App/Ochiga-frontend-for-estate-and-smart-home/ochiga-frontend:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=production
     depends_on:
-      - postgres
+      - backend
 
   backend:
     build:
-      context: ./Ochiga-backend-for-estate-and-smart-home
+      context: ./ochiga-backend-for-estate-and-smart-home
       dockerfile: Dockerfile
-    container_name: estate_backend
-    restart: always
-    depends_on:
-      - postgres
+    container_name: ochiga-backend
     ports:
-      - "3000:3000"
-    environment:
-      DB_HOST: postgres
-      DB_PORT: 5432
-      DB_USERNAME: postgres
-      DB_PASSWORD: postgres
-      DB_NAME: estate_app
-      NODE_ENV: development
+      - "4000:4000"
+    working_dir: /app
     volumes:
-      - ./Ochiga-backend-for-estate-and-smart-home:/app
-
-  frontend:
-    build:
-      context: ./Ochiga-frontend-for-estate-and-smart-home/ochiga-frontend
-      dockerfile: Dockerfile
-    container_name: estate_frontend
-    restart: always
-    depends_on:
-      - backend
-    ports:
-      - "3001:3000"
+      - ./ochiga-backend-for-estate-and-smart-home:/app
+      - /app/node_modules
     environment:
-      NEXT_PUBLIC_API_URL: http://estate_backend:3000
-    volumes:
-      - ./Ochiga-frontend-for-estate-and-smart-home/ochiga-frontend:/app
-
-volumes:
-  db_data:
+      - NODE_ENV=production
