@@ -1,13 +1,13 @@
 services:
   frontend:
     build:
-      context: ./ochiga-frontend       # 👈 everything lives here, including Dockerfile
+      context: ./ochiga-frontend-for-estate-and-smart-home/ochiga-frontend
       dockerfile: Dockerfile
     container_name: ochiga-frontend
     ports:
       - "3000:3000"
     volumes:
-      - ./ochiga-frontend:/app
+      - ./ochiga-frontend-for-estate-and-smart-home/ochiga-frontend:/app
     working_dir: /app
     command: npm run start
     depends_on:
