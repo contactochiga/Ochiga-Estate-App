@@ -26,7 +26,7 @@ services:
 
   backend:
     build:
-      context: ./ochiga-backend-for-estate-and-smart-home
+      context: ./Ochiga-backend-for-estate-and-smart-home
       dockerfile: Dockerfile
     container_name: estate_backend
     restart: always
@@ -42,11 +42,11 @@ services:
       DB_NAME: estate_app
       NODE_ENV: development
     volumes:
-      - ./ochiga-backend-for-estate-and-smart-home:/app
+      - ./Ochiga-backend-for-estate-and-smart-home:/app
 
   frontend:
     build:
-      context: ./Ochiga-frontend-for-estate-and-smart-home
+      context: ./Ochiga-frontend-for-estate-and-smart-home/ochiga-frontend
       dockerfile: Dockerfile
     container_name: estate_frontend
     restart: always
@@ -57,7 +57,7 @@ services:
     environment:
       NEXT_PUBLIC_API_URL: http://estate_backend:3000
     volumes:
-      - ./Ochiga-frontend-for-estate-and-smart-home:/app
+      - ./Ochiga-frontend-for-estate-and-smart-home/ochiga-frontend:/app
 
 volumes:
   db_data:
