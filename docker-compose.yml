@@ -2,18 +2,16 @@ version: "3.9"
 
 services:
   frontend:
-    build:
-      context: ./Ochiga-Estate-App/Ochiga-frontend-for-estate-and-smart-home/ochiga-frontend
-      dockerfile: Dockerfile
-    container_name: ochiga-frontend
-    ports:
-      - "3000:3000"
-    working_dir: /app
-    volumes:
-      - ./Ochiga-Estate-App/Ochiga-frontend-for-estate-and-smart-home/ochiga-frontend:/app
-      - /app/node_modules
-    environment:
-      - NODE_ENV=production
+  build:
+    context: ./Ochiga-frontend-for-estate-and-smart-home
+    dockerfile: Dockerfile
+  container_name: ochiga-frontend
+  ports:
+    - "3000:3000"
+  volumes:
+    - ./Ochiga-frontend-for-estate-and-smart-home:/app
+  working_dir: /app
+  command: npm run start
     depends_on:
       - backend
 
