@@ -1,15 +1,13 @@
-version: "3.9"
-
 services:
   frontend:
     build:
-      context: ./Ochiga-frontend-for-estate-and-smart-home # 👈 look inside folder for package.json
-      dockerfile: ../Dockerfile                           # 👈 use the Dockerfile at the root of frontend
+      context: ./ochiga-frontend       # 👈 everything lives here, including Dockerfile
+      dockerfile: Dockerfile
     container_name: ochiga-frontend
     ports:
       - "3000:3000"
     volumes:
-      - ./Ochiga-frontend-for-estate-and-smart-home:/app
+      - ./ochiga-frontend:/app
     working_dir: /app
     command: npm run start
     depends_on:
