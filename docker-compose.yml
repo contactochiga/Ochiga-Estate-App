@@ -1,3 +1,5 @@
+version: "3.9"
+
 services:
   frontend:
     build:
@@ -8,8 +10,9 @@ services:
       - "3000:3000"
     volumes:
       - ./Ochiga-frontend-for-estate-and-smart-home/ochiga-frontend:/app
+      - /app/node_modules
     working_dir: /app
-    command: npm run start
+    command: npm run dev
     depends_on:
       - backend
 
@@ -19,10 +22,9 @@ services:
       dockerfile: Dockerfile
     container_name: ochiga-backend
     ports:
-      - "4000:4000"
-    working_dir: /app
+      - "4000:3000" # external:internal
     volumes:
       - ./ochiga-backend-for-estate-and-smart-home:/app
       - /app/node_modules
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
