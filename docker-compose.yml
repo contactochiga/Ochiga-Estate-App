@@ -1,28 +1,67 @@
+version: '3.8'
+
 services:
-  frontend:
-    build:
-      context: ./Ochiga-frontend-for-estate-and-smart-home/ochiga-frontend
-      dockerfile: Dockerfile
-    container_name: ochiga-frontend
+  postgres:
+    image: postgres:15
+    container_name: estate_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: estate_app
     ports:
-      - "3000:3000"
+      - "5432:5432"
     volumes:
-      - ./Ochiga-frontend-for-estate-and-smart-home/ochiga-frontend:/app
-    working_dir: /app
-    command: npm run dev
+      - db_data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: estate_pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@ochiga.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    ports:
+      - "5050:80"
     depends_on:
-      - backend
+      - postgres
 
   backend:
     build:
       context: ./ochiga-backend-for-estate-and-smart-home
       dockerfile: Dockerfile
-    container_name: ochiga-backend
+    container_name: estate_backend
+    restart: always
+    depends_on:
+      - postgres
     ports:
-      - "4000:4000"
-    working_dir: /app
+      - "3000:3000"
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: estate_app
+      NODE_ENV: development
     volumes:
       - ./ochiga-backend-for-estate-and-smart-home:/app
       - /app/node_modules
+
+  frontend:
+    build:
+      context: ./ochiga-frontend-for-estate-and-smart-home/ochiga-frontend
+      dockerfile: Dockerfile
+    container_name: estate_frontend
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "3001:3000"
     environment:
-      - NODE_ENV=production
+      NEXT_PUBLIC_API_URL: http://estate_backend:3000
+    volumes:
+      - ./ochiga-frontend-for-estate-and-smart-home/ochiga-frontend:/app
+      - /app/node_modules
+
+volumes:
+  db_data:
